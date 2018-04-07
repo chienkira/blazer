@@ -14,6 +14,19 @@ module Blazer
       end
 
       start_time = Time.now
+
+      # remove the ;
+      statement = statement.gsub ';', ' '
+
+      # pagination
+      pager_limit = 10000    # maximum: 10,000
+      pager_query_result = data_source.run_statement("select count(*) as count from ( #{statement} ) as temp_table", options)
+
+      # add LIMIT if it is not presented
+      unless statement.match(/.*LIMIT +\d+;?\s*$/i)
+        statement = "#{statement} LIMIT #{pager_limit}"
+      end
+
       result = data_source.run_statement(statement, options)
       duration = Time.now - start_time
 
@@ -32,6 +45,12 @@ module Blazer
         query.checks.each do |check|
           check.update_state(result)
         end
+      end
+
+      if pager_query_result.rows.present? and pager_query_result.rows[0].present?
+        result.pager[:maximum] = pager_limit
+        result.pager[:total_count] = pager_query_result.rows[0][0]
+        result.pager[:page_count] = (pager_query_result.rows[0][0] - 1)/pager_limit + 1
       end
 
       result

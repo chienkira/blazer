@@ -25,7 +25,13 @@
       </p>
     <% end %>
     <p class="text-muted">
-      <%= pluralize(@rows.size, "row") %>
+      <% if @pager[:page_count] > 1 %>
+        <strong style="color:red">注意：表示上限（<%= @pager[:maximum] %>件）を超過しました。
+          <br/>　　　このクエリの結果は全部 <%= @pager[:total_count] %>件 があります。</strong>
+      <% end %>
+    </p>
+    <p class="text-muted">
+      <%= "#{@rows.size}件" %>
 
       <% @checks.select(&:state).each do |check| %>
         &middot; <small class="check-state <%= check.state.parameterize.gsub("-", "_") %>"><%= link_to check.state.upcase, edit_check_path(check) %></small>

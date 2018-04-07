@@ -1,6 +1,6 @@
 module Blazer
   class Result
-    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached
+    attr_reader :data_source, :columns, :rows, :error, :cached_at, :just_cached, :pager
 
     def initialize(data_source, columns, rows, error, cached_at, just_cached)
       @data_source = data_source
@@ -9,6 +9,7 @@ module Blazer
       @error = error
       @cached_at = cached_at
       @just_cached = just_cached
+      @pager = {}
     end
 
     def timed_out?

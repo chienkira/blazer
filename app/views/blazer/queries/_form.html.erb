@@ -14,33 +14,33 @@
         </div>
         <div class="form-group text-right">
           <div class="pull-left" style="margin-top: 9px;">
-            <%= link_to "Back", :back %>
+            <%= link_to "戻る", :back %>
           </div>
-          <a :href="dataSourcePath" target="_blank" style="margin-right: 10px;">Schema</a>
+          <a :href="dataSourcePath" target="_blank" style="margin-right: 10px;">テーブル一覧</a>
           <%= f.select :data_source, Blazer.data_sources.values.select { |ds| q = @query.dup; q.data_source = ds.id; q.editable?(blazer_user) }.map { |ds| [ds.name, ds.id] }, {}, class: ("hide" if Blazer.data_sources.size == 1), style: "width: 140px;" %>
           <div id="tables" style="display: inline-block; width: 250px; margin-right: 10px;">
-            <select id="table_names" style="width: 240px;" placeholder="Preview table"></select>
+            <select id="table_names" style="width: 240px;" placeholder="テーブルプレビュー"></select>
           </div>
-          <a v-on:click="run" v-if="!running" class="btn btn-info" style="vertical-align: top; width: 70px;">Run</a>
-          <a v-on:click="cancel" v-if="running" class="btn btn-danger" style="vertical-align: top; width: 70px;">Cancel</a>
+          <a v-on:click="run" v-if="!running" class="btn btn-info" style="vertical-align: top; width: 70px;">実行</a>
+          <a v-on:click="cancel" v-if="running" class="btn btn-danger" style="vertical-align: top; width: 70px;">キャンセル</a>
         </div>
       </div>
       <div class="col-xs-4">
         <div class="form-group">
-          <%= f.label :name %>
+          <%= f.label :クエリ名 %>
           <%= f.text_field :name, class: "form-control" %>
         </div>
         <div class="form-group">
-          <%= f.label :description %>
-          <%= f.text_area :description, placeholder: "Optional", style: "height: 80px;", class: "form-control" %>
+          <%= f.label :クエリ説明 %>
+          <%= f.text_area :description, placeholder: "必須ではない", style: "height: 80px;", class: "form-control" %>
         </div>
         <div class="text-right">
           <%= f.submit "For Enter Press", class: "hide" %>
           <% if @query.persisted? %>
-            <%= link_to "Delete", query_path(@query), method: :delete, "data-confirm" => "Are you sure?", class: "btn btn-danger" %>
-            <%= f.submit "Fork", class: "btn btn-info" %>
+            <%= link_to "削除", query_path(@query), method: :delete, "data-confirm" => "本当に削除しますか?", class: "btn btn-danger" %>
+            <%= f.submit "コピー", class: "btn btn-info" %>
           <% end %>
-          <%= f.submit @query.persisted? ? "Update" : "Create", class: "btn btn-success" %>
+          <%= f.submit @query.persisted? ? "更新" : "登録", class: "btn btn-success" %>
         </div>
         <% if @query.persisted? %>
           <% dashboards_count = @query.dashboards.count %>

@@ -83,6 +83,23 @@ module Blazer
       data_source = @query.data_source if @query && @query.data_source
       @data_source = Blazer.data_sources[data_source]
 
+      # ・サーバ側（controllerで）「 * 」やUPDATE、DELETEなどを削除する処理を追加 START
+      # These keywords are not allowed! DDL keywords, DML keywords, DCL keywords, DTL keywords
+      if @statement.match(/(?:INSERT|UPDATE|DELETE| \* |CREATE|ALTER|DROP|GRANT|REVOKE|START TRANSACTION|SAVEPOINT|COMMIT|ROLLBACK).*/i)
+        @error = "「 * 」やINSERTやUPDATEやDELETEなどは許可されません。"
+        @rows = []
+        @columns = []
+        @run_id = nil
+        @success = false
+        render_run
+        return
+      end
+      # ・サーバ側（controllerで）「 * 」やUPDATE、DELETEなどを削除する処理を追加 END
+      # Create read-only MySQL user
+      #   GRANT SELECT, SHOW VIEW ON database_name.* TO read_only_blazer@’127.0.0.1′ IDENTIFIED BY ‘secret123‘;
+      #   FLUSH PRIVILEGES;
+
+
       if @run_id
         @timestamp = blazer_params[:timestamp].to_i
 
@@ -97,6 +114,7 @@ module Blazer
           @just_cached = !@result.error && @result.cached_at.present?
           @cached_at = nil
           params[:data_source] = nil
+          @pager = @result.pager
           render_run
         elsif Time.now > Time.at(@timestamp + (@data_source.timeout || 600).to_i + 5)
           # query lost
@@ -133,6 +151,7 @@ module Blazer
           @error = @result.error
           @cached_at = @result.cached_at
           @just_cached = @result.just_cached
+          @pager = @result.pager
 
           render_run
         else
