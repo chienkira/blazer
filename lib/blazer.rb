@@ -38,7 +38,7 @@ module Blazer
     attr_accessor :images
     attr_accessor :query_editable
   end
-  self.audit = true
+  self.audit = false
   self.user_name = :name
   self.check_schedules = ["5 minutes", "1 hour", "1 day"]
   self.anomaly_checks = false

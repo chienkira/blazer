@@ -56,7 +56,7 @@ module Blazer
         elsif sqlserver?
           "SELECT TOP (10) * FROM {table}"
         else
-          "SELECT * FROM {table} LIMIT 10"
+          "DESCRIBE {table}"
         end
       end
 

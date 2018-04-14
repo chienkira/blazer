@@ -23,8 +23,10 @@ module Blazer
       pager_query_result = data_source.run_statement("select count(*) as count from ( #{statement} ) as temp_table", options)
 
       # add LIMIT if it is not presented
-      unless statement.match(/.*LIMIT +\d+;?\s*$/i)
-        statement = "#{statement} LIMIT #{pager_limit}"
+      if statement.downcase.include? "select "
+        unless statement.match(/.*LIMIT +\d+;?.*$/i)
+          statement = "#{statement} LIMIT #{pager_limit}"
+        end
       end
 
       result = data_source.run_statement(statement, options)
@@ -47,6 +49,7 @@ module Blazer
         end
       end
 
+      # pagination
       if pager_query_result.rows.present? and pager_query_result.rows[0].present?
         result.pager[:maximum] = pager_limit
         result.pager[:total_count] = pager_query_result.rows[0][0]

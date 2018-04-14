@@ -96,7 +96,7 @@ module Blazer
       end
       # ・サーバ側（controllerで）「 * 」やUPDATE、DELETEなどを削除する処理を追加 END
       # Create read-only MySQL user
-      #   GRANT SELECT, SHOW VIEW ON database_name.* TO read_only_blazer@’127.0.0.1′ IDENTIFIED BY ‘secret123‘;
+      #   GRANT SELECT, SHOW VIEW ON database_name.* TO db_user_readonly@’127.0.0.1′ IDENTIFIED BY ‘pape1009‘;
       #   FLUSH PRIVILEGES;
 
 
