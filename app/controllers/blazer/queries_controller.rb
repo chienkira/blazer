@@ -85,7 +85,7 @@ module Blazer
 
       # ・サーバ側（controllerで）「 * 」やUPDATE、DELETEなどを削除する処理を追加 START
       # These keywords are not allowed! DDL keywords, DML keywords, DCL keywords, DTL keywords
-      if @statement.match(/(?:INSERT|UPDATE|DELETE| \* |CREATE|ALTER|DROP|GRANT|REVOKE|START TRANSACTION|SAVEPOINT|COMMIT|ROLLBACK).*/i)
+      if @statement.match(/(^| |\n)+(?:INSERT|UPDATE|DELETE|\*|CREATE|ALTER|DROP|GRANT|REVOKE|START TRANSACTION|SAVEPOINT|COMMIT|ROLLBACK)($| |\n)+/i)
         @error = "「 * 」やINSERTやUPDATEやDELETEなどは許可されません。"
         @rows = []
         @columns = []
