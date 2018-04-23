@@ -312,7 +312,8 @@ module Blazer
       end
 
       def csv_data(columns, rows, data_source)
-        CSV.generate do |csv|
+        bom = %w(EF BB BF).map { |e| e.hex.chr }.join
+        CSV.generate(bom) do |csv|
           csv << columns
           rows.each do |row|
             csv << row.each_with_index.map { |v, i| v.is_a?(Time) ? blazer_time_value(data_source, columns[i], v) : v }
