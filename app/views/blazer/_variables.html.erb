@@ -57,8 +57,8 @@
         }
 
         function setTimeInputs(start, end) {
-          $("#start_time").val(toDate(start).utc().format())
-          $("#end_time").val(toDate(end).endOf("day").utc().format())
+          $("#start_time").val(toDate(start).format())
+          $("#end_time").val(toDate(end).endOf("day").format())
         }
 
         $("#reportrange").daterangepicker(
